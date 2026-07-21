@@ -624,7 +624,7 @@ function initAnimations() {
             ],
           },
           {
-            label: "Longaniza",
+            label: "Embutidos",
             body: "M54 158 C72 84 142 55 219 70 C277 82 315 118 353 98 C378 85 391 113 374 132 C337 174 288 151 245 130 C188 102 130 110 104 166 C92 192 47 185 54 158 Z",
             details: [
               "M56 149 C46 145 39 139 34 131",
@@ -636,7 +636,7 @@ function initAnimations() {
             ],
           },
           {
-            label: "Vísceras / corazón",
+            label: "Vísceras",
             body: "M214 211 C194 183 119 145 113 94 C108 52 148 34 181 63 C199 27 251 24 278 57 C310 96 280 147 214 211 Z",
             details: [
               "M181 64 C168 43 170 24 183 13",
@@ -648,7 +648,7 @@ function initAnimations() {
             ],
           },
           {
-            label: "Abarrotes / botella",
+            label: "Abarrotes",
             body: "M169 39 L169 70 C169 84 148 96 145 119 L135 207 C134 221 143 229 157 229 L266 229 C280 229 289 220 287 207 L277 119 C274 96 253 84 253 70 L253 39 Z",
             details: [
               "M168 39 L254 39 L254 23 L168 23 Z",
@@ -660,7 +660,7 @@ function initAnimations() {
             ],
           },
           {
-            label: "Frescos / manzana y perejil",
+            label: "Frutas y Verduras",
             body: "M208 76 C177 47 125 64 112 109 C96 165 143 213 181 207 C198 204 207 214 224 210 C266 220 315 169 305 116 C296 67 244 52 208 76 Z",
             details: [
               "M208 78 C205 50 214 25 233 16",

@@ -20,7 +20,7 @@
     <meta property="og:image" content="https://laprovidencia.mx/img/local.jpg" />
     <link rel="canonical" href="https://laprovidencia.mx/" />
     <link rel="icon" type="image/png" href="/img/favicon.png" />
-    <link rel="preload" as="image" href="/img/hero_laprovi1_poster.webp" fetchpriority="high" />
+    <link rel="preload" as="image" href="/img/video_principal_poster.webp" fetchpriority="high" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -80,7 +80,7 @@
 
     <header class="site-header" data-header>
       <a class="brand" href="#inicio" aria-label="La Providencia, ir al inicio">
-        <img src="/img/logo_laprovi1_nav.webp" alt="" width="48" height="48" />
+        <img class="brand__mark--combined" src="/img/logo_conjunto.webp" alt="" width="512" height="512" />
         <span>La Providencia</span>
       </a>
       <nav class="desktop-nav" aria-label="Navegación principal">
@@ -131,11 +131,10 @@
             loop
             playsinline
             preload="metadata"
-            poster="/img/hero_laprovi1_poster.webp"
+            poster="/img/video_principal_poster.webp"
             aria-hidden="true"
           >
-            <source media="(max-width: 700px)" src="/video/hero_laprovi1_movil.mp4" type="video/mp4" />
-            <source src="/video/hero_laprovi1.mp4" type="video/mp4" />
+            <source src="/video/video_principal.mp4" type="video/mp4" />
           </video>
         </div>
         <div class="hero__shade" aria-hidden="true"></div>
@@ -205,7 +204,10 @@
             </div>
             <div class="house__copy">
               <div>
-                <span class="house__number">I</span>
+                <div class="house__identity">
+                  <img class="house__logo" src="/img/logo_laprovi1_nav.webp" alt="Logo de Carnicer&iacute;a La Providencia I" width="128" height="128" loading="lazy" decoding="async" />
+                  <span class="house__number" aria-hidden="true">I</span>
+                </div>
                 <p class="label">Mercado Santa Cruz</p>
                 <h3>La casa<br />de la carne.</h3>
               </div>
@@ -225,7 +227,10 @@
             </div>
             <div class="house__copy">
               <div>
-                <span class="house__number">II</span>
+                <div class="house__identity">
+                  <img class="house__logo" src="/img/logo_laprovi2_nav.webp" alt="Logo de Carnicer&iacute;a La Providencia II" width="128" height="128" loading="lazy" decoding="async" />
+                  <span class="house__number" aria-hidden="true">II</span>
+                </div>
                 <p class="label">Santa María Ajoloapan</p>
                 <h3>Carne y<br />mandado.</h3>
               </div>
@@ -451,7 +456,7 @@
 
       <section class="final-cta section" aria-labelledby="cta-title">
         <div class="final-cta__media" aria-hidden="true">
-          <img src="/img/img_laprovi1/carnicero_thumb.webp" alt="" width="800" height="450" loading="lazy" />
+          <img src="/img/carnicero_fileteando.webp" alt="" width="1376" height="768" loading="lazy" decoding="async" />
         </div>
         <div class="final-cta__content">
           <p class="label">Haz tu pedido hoy</p>

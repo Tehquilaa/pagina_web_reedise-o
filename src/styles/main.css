@@ -315,6 +315,12 @@ address {
   object-fit: contain;
 }
 
+.site-header .brand__mark--combined {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+}
+
 .desktop-nav {
   display: flex;
   align-items: center;
@@ -678,9 +684,27 @@ address {
   background: var(--sage-dark);
 }
 
+.house__identity {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 80px;
+}
+
+.house__logo {
+  width: 112px;
+  height: 112px;
+  flex: 0 0 auto;
+  border: 2px solid rgba(255, 255, 255, 0.42);
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 16px 36px rgba(10, 8, 7, 0.24);
+}
+
 .house__number {
   display: block;
-  margin-bottom: 80px;
+  margin-bottom: 0;
   color: rgba(255, 255, 255, 0.28);
   font-family: var(--font-serif);
   font-size: 120px;
@@ -1852,6 +1876,12 @@ button.cut-card {
   font-size: 10px;
 }
 
+@media (min-width: 1101px) and (max-width: 1919px) {
+  .cuts__visual {
+    top: 20px;
+  }
+}
+
 @media (max-width: 1100px) {
   :root {
     --page: calc(100% - 48px);
@@ -1941,6 +1971,11 @@ button.cut-card {
   .brand img {
     width: 42px;
     height: 42px;
+  }
+
+  .site-header .brand__mark--combined {
+    width: 48px;
+    height: 48px;
   }
 
   .desktop-nav,
@@ -2079,8 +2114,16 @@ button.cut-card {
     padding: 40px 24px;
   }
 
-  .house__number {
+  .house__identity {
     margin-bottom: 34px;
+  }
+
+  .house__logo {
+    width: 88px;
+    height: 88px;
+  }
+
+  .house__number {
     font-size: 80px;
   }
 
@@ -2388,7 +2431,7 @@ button.cut-card {
   }
 
   .hero__media {
-    background: url("/img/hero_laprovi1_poster.webp") center / cover no-repeat;
+    background: url("/img/video_principal_poster.webp") center / cover no-repeat;
   }
 
   .manifesto__copy .word {
