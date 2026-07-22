@@ -24,6 +24,13 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 const isFinePointer = window.matchMedia("(pointer: fine)").matches;
 const body = document.body;
 
+document.documentElement.dataset.motion = prefersReducedMotion ? "reduced" : "full";
+
+if (import.meta.env.DEV && !window.location.hash && "scrollRestoration" in window.history) {
+  window.history.scrollRestoration = "manual";
+  window.scrollTo(0, 0);
+}
+
 const iconSet = {
   ArrowDown,
   ArrowUp,
@@ -88,59 +95,37 @@ function initPreloader() {
     return Promise.resolve();
   }
 
-  const heroVideo = document.querySelector(".hero__video");
-  const videoReady = new Promise((resolve) => {
-    if (!heroVideo || heroVideo.readyState >= 2) {
-      resolve();
-      return;
-    }
-    heroVideo.addEventListener("loadeddata", resolve, { once: true });
-    window.setTimeout(resolve, 2600);
-  });
-
   const progress = { value: 0 };
-  const counterTween = gsap.to(progress, {
-    value: 86,
-    duration: 1.6,
-    ease: "power2.out",
-    onUpdate: () => {
-      value.textContent = Math.round(progress.value);
-      gsap.set(line, { scaleX: progress.value / 100 });
-    },
+  return new Promise((resolve) => {
+    requestAnimationFrame(() => {
+      gsap
+        .timeline({
+          onComplete: () => {
+            preloader.remove();
+            sessionStorage.setItem("la-providencia-loaded", "1");
+            resolve();
+          },
+        })
+        .to(progress, {
+          value: 100,
+          duration: 0.22,
+          ease: "power2.out",
+          onUpdate: () => {
+            value.textContent = Math.round(progress.value);
+            gsap.set(line, { scaleX: progress.value / 100 });
+          },
+        })
+        .to(preloader, {
+          clipPath: "inset(0 0 100% 0)",
+          duration: 0.32,
+          ease: "power3.inOut",
+        });
+    });
   });
-
-  return Promise.all([document.fonts.ready, videoReady]).then(
-    () =>
-      new Promise((resolve) => {
-        counterTween.kill();
-        gsap
-          .timeline({
-            onComplete: () => {
-              preloader.remove();
-              sessionStorage.setItem("la-providencia-loaded", "1");
-              resolve();
-            },
-          })
-          .to(progress, {
-            value: 100,
-            duration: 0.35,
-            ease: "power2.out",
-            onUpdate: () => {
-              value.textContent = Math.round(progress.value);
-              gsap.set(line, { scaleX: progress.value / 100 });
-            },
-          })
-          .to(preloader, {
-            clipPath: "inset(0 0 100% 0)",
-            duration: 0.8,
-            ease: "power4.inOut",
-          });
-      }),
-  );
 }
 
 function initSmoothScroll() {
-  if (prefersReducedMotion) return null;
+  if (prefersReducedMotion || !isFinePointer || window.matchMedia("(max-width: 760px)").matches) return null;
   const lenis = new Lenis({
     anchors: true,
     duration: 1.05,
@@ -152,6 +137,94 @@ function initSmoothScroll() {
   gsap.ticker.add((time) => lenis.raf(time * 1000));
   gsap.ticker.lagSmoothing(0);
   return lenis;
+}
+
+function loadDeferredVideo(video) {
+  if (!video || video.dataset.videoLoaded === "true") return;
+
+  let hasSource = false;
+  video.querySelectorAll("source[data-src]").forEach((source) => {
+    source.src = source.dataset.src;
+    source.removeAttribute("data-src");
+    hasSource = true;
+  });
+
+  if (video.dataset.src) {
+    video.src = video.dataset.src;
+    video.removeAttribute("data-src");
+    hasSource = true;
+  }
+
+  if (!hasSource) return;
+  video.dataset.videoLoaded = "true";
+  video.load();
+}
+
+function initDeferredHeroVideo() {
+  const heroVideo = document.querySelector(".hero__video[data-deferred-video]");
+  if (!heroVideo || prefersReducedMotion) return;
+
+  const load = () => {
+    loadDeferredVideo(heroVideo);
+    const bounds = heroVideo.getBoundingClientRect();
+    if (bounds.bottom > 0 && bounds.top < window.innerHeight) heroVideo.play().catch(() => {});
+  };
+
+  if ("requestIdleCallback" in window) window.requestIdleCallback(load, { timeout: 1600 });
+  else window.setTimeout(load, 700);
+}
+
+function initLazyMaps() {
+  const section = document.querySelector(".locations");
+  const loaders = [...document.querySelectorAll("[data-map-src]")];
+  if (!loaders.length) return;
+
+  const loadMap = (loader) => {
+    const surface = loader.closest(".location__map-surface");
+    if (!surface || surface.dataset.mapRequested === "true") return;
+
+    surface.dataset.mapRequested = "true";
+
+    const iframe = document.createElement("iframe");
+    iframe.className = "location__map-iframe";
+    iframe.title = loader.dataset.mapTitle;
+    iframe.src = loader.dataset.mapSrc;
+    iframe.loading = "eager";
+    iframe.referrerPolicy = "no-referrer-when-downgrade";
+    iframe.allowFullscreen = true;
+
+    let fallbackTimer;
+    const revealMap = () => {
+      if (surface.classList.contains("is-loaded")) return;
+
+      window.clearTimeout(fallbackTimer);
+      const status = loader.querySelector("[data-map-status]");
+      if (status) status.textContent = "Mapa listo";
+      surface.classList.add("is-loaded");
+    };
+
+    iframe.addEventListener("load", revealMap, { once: true });
+    surface.append(iframe);
+    fallbackTimer = window.setTimeout(revealMap, 12000);
+  };
+
+  const loadAllMaps = () => loaders.forEach(loadMap);
+
+  if (!section || !("IntersectionObserver" in window)) {
+    loadAllMaps();
+    return;
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      if (!entries.some((entry) => entry.isIntersecting)) return;
+      observer.disconnect();
+      loadAllMaps();
+    },
+    { rootMargin: "700px 0px", threshold: 0.01 },
+  );
+
+  observer.observe(section);
 }
 
 function initHeader(lenis) {
@@ -518,6 +591,143 @@ function initAnimations() {
     repeat: -1,
   });
 
+  media.add("(min-width: 761px)", () => {
+    const locationsHeading = document.querySelector(".locations .section-heading");
+    const locationsTitle = document.querySelector("#locations-title");
+    const locationsIndex = locationsHeading?.querySelector(".section-index");
+    let locationsTitleSplit;
+
+    if (locationsHeading && locationsTitle && locationsIndex) {
+      locationsTitleSplit = new SplitText(locationsTitle, {
+        type: "lines,chars",
+        linesClass: "locations-title-line",
+        charsClass: "locations-title-char",
+      });
+
+      gsap
+        .timeline({
+          scrollTrigger: {
+            trigger: locationsHeading,
+            start: "top 78%",
+            refreshPriority: -10,
+            invalidateOnRefresh: true,
+            toggleActions: "play none none reverse",
+          },
+        })
+        .from(locationsIndex, {
+          y: 24,
+          autoAlpha: 0,
+          duration: 0.55,
+          ease: "expo.out",
+        })
+        .from(
+          locationsTitleSplit.chars,
+          {
+            yPercent: 120,
+            rotationX: -40,
+            autoAlpha: 0,
+            transformOrigin: "50% 100%",
+            transformPerspective: 700,
+            duration: 0.9,
+            stagger: 0.02,
+            ease: "expo.out",
+          },
+          "-=0.18",
+        );
+    }
+
+    gsap.utils.toArray(".locations .location").forEach((card) => {
+      const info = card.querySelector(".location__info");
+      const mapFrame = card.querySelector(".location__map-frame");
+      const numeral = card.querySelector(".location__number");
+      const mapSurface = mapFrame?.querySelector(".location__map-surface");
+      const details = [
+        info?.querySelector(":scope > .label"),
+        info?.querySelector("h3"),
+        info?.querySelector("address"),
+        ...Array.from(info?.querySelectorAll("dl > div") || []),
+        info?.querySelector(":scope > .text-link"),
+      ].filter(Boolean);
+
+      if (info && mapFrame) {
+        gsap
+          .timeline({
+            scrollTrigger: {
+              trigger: card,
+              start: "top 72%",
+              refreshPriority: -10,
+              invalidateOnRefresh: true,
+              toggleActions: "play none none reverse",
+            },
+          })
+          .from(card, {
+            "--sx": 0,
+            duration: 1.2,
+            ease: "power4.inOut",
+          })
+          .from(
+            details,
+            {
+              y: 42,
+              autoAlpha: 0,
+              duration: 0.85,
+              stagger: 0.09,
+              ease: "expo.out",
+            },
+            0.28,
+          )
+          .to(
+            mapFrame,
+            {
+              clipPath: "inset(0 0 0% 0)",
+              duration: 1.1,
+              ease: "power4.inOut",
+            },
+            0.42,
+          );
+      }
+
+      if (numeral) {
+        gsap.fromTo(
+          numeral,
+          { yPercent: 35 },
+          {
+            yPercent: -35,
+            ease: "none",
+            scrollTrigger: {
+              trigger: card,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: 0.6,
+              refreshPriority: -10,
+              invalidateOnRefresh: true,
+            },
+          },
+        );
+      }
+
+      if (mapSurface) {
+        gsap.fromTo(
+          mapSurface,
+          { yPercent: -8 },
+          {
+            yPercent: 0,
+            ease: "none",
+            scrollTrigger: {
+              trigger: card,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: 0.6,
+              refreshPriority: -10,
+              invalidateOnRefresh: true,
+            },
+          },
+        );
+      }
+    });
+
+    return () => locationsTitleSplit?.revert();
+  });
 
   media.add(
     {
@@ -798,6 +1008,7 @@ function initAnimations() {
           if (item.dataset.reelActive !== "true") return;
           const video = item.querySelector(".gallery-item__reel-video");
           if (!video) return;
+          loadDeferredVideo(video);
           if (video.paused) {
             galleryItems.forEach((candidate) => pauseReelVideo(candidate));
             video.play().then(() => updateVideoControl(item, true)).catch(() => updateVideoControl(item, false));
@@ -945,11 +1156,23 @@ async function init() {
   initLightbox(lenis);
   initCursorAndMagnets();
   initVideoVisibility();
+  initLazyMaps();
   initMobileProgress();
 
   await preloaderPromise;
+  initDeferredHeroVideo();
+
+  if (import.meta.env.DEV && !window.location.hash) {
+    if (document.readyState !== "complete") {
+      await new Promise((resolve) => window.addEventListener("load", resolve, { once: true }));
+    }
+    lenis?.scrollTo(0, { immediate: true, force: true });
+    window.scrollTo(0, 0);
+  }
+
   initAnimations();
   ScrollTrigger.refresh();
+  document.fonts?.ready.then(() => ScrollTrigger.refresh());
 }
 
 init();

@@ -2,8 +2,6 @@
 @import "@fontsource/instrument-serif/latin-400.css";
 @import "@fontsource/instrument-serif/latin-400-italic.css";
 @import "@fontsource/space-grotesk/latin-400.css";
-@import "@fontsource/space-grotesk/latin-500.css";
-@import "@fontsource/space-grotesk/latin-600.css";
 @import "@fontsource/space-grotesk/latin-700.css";
 
 :root {
@@ -660,6 +658,14 @@ address {
 .house__image {
   min-height: 620px;
   overflow: hidden;
+}
+
+.house__image picture,
+.gallery-item picture,
+.final-cta__media picture {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .house__image img {
@@ -1387,16 +1393,44 @@ button.cut-card {
   background: var(--smoke);
 }
 
+.locations-title-line {
+  display: block;
+  overflow: hidden;
+  perspective: 700px;
+}
+
+.locations-title-char {
+  display: inline-block;
+  backface-visibility: hidden;
+}
+
 .locations__list {
   margin-top: 80px;
   border-top: 1px solid var(--border);
 }
 
 .location {
+  --sx: 1;
+
+  position: relative;
   display: grid;
   grid-template-columns: 44% 56%;
   min-height: 580px;
   border-bottom: 1px solid var(--border);
+}
+
+.location::before {
+  position: absolute;
+  z-index: 2;
+  top: -1px;
+  right: 0;
+  left: 0;
+  height: 2px;
+  transform: scaleX(var(--sx));
+  transform-origin: left center;
+  background: var(--gold);
+  content: "";
+  pointer-events: none;
 }
 
 .location__info {
@@ -1463,19 +1497,134 @@ button.cut-card {
   padding: 48px 0;
 }
 
-.location__map iframe {
-  width: 100%;
+.location__map-frame {
   height: 100%;
   min-height: 480px;
-  border: 0;
-  border-radius: 2px;
-  filter: grayscale(1) contrast(1.05);
-  transition: filter 350ms ease;
+  overflow: hidden;
+  clip-path: inset(0 0 100% 0);
 }
 
-.location__map:hover iframe,
-.location__map:focus-within iframe {
+.location__map-surface {
+  position: relative;
+  width: 100%;
+  height: 115%;
+  min-height: 552px;
+}
+
+.location__map-iframe,
+.location__map-loader {
+  width: 100%;
+  height: 100%;
+  min-height: 552px;
+  border: 0;
+  border-radius: 2px;
+}
+
+.location__map-iframe {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  filter: grayscale(1) contrast(1.05);
+  transition: opacity 350ms ease, filter 350ms ease;
+}
+
+.location__map-surface.is-loaded .location__map-iframe {
+  opacity: 1;
+}
+
+.location__map:hover .location__map-iframe,
+.location__map:focus-within .location__map-iframe {
   filter: grayscale(0);
+}
+
+.location__map-loader {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  padding: 32px;
+  overflow: hidden;
+  background: #d8cdbd;
+  color: var(--bone);
+  text-align: left;
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 300ms ease, visibility 0s linear 300ms;
+}
+
+.location__map-surface.is-loaded .location__map-loader {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.location__map-grid {
+  position: absolute;
+  inset: -12%;
+  transform: rotate(-7deg) scale(1.08);
+  background:
+    linear-gradient(113deg, transparent 0 34%, rgba(112, 92, 70, 0.52) 35% 36.5%, transparent 37.5% 100%),
+    linear-gradient(22deg, transparent 0 43%, rgba(255, 255, 255, 0.72) 44% 48%, transparent 49% 100%),
+    linear-gradient(154deg, transparent 0 57%, rgba(140, 46, 36, 0.65) 58% 60%, transparent 61% 100%),
+    repeating-linear-gradient(90deg, rgba(88, 71, 55, 0.15) 0 1px, transparent 1px 58px),
+    repeating-linear-gradient(0deg, rgba(88, 71, 55, 0.13) 0 1px, transparent 1px 46px);
+}
+
+.location__map-grid::after {
+  position: absolute;
+  inset: 12% 18%;
+  border: 3px solid rgba(125, 31, 26, 0.72);
+  border-top-color: transparent;
+  border-left-color: transparent;
+  border-radius: 48% 30% 55% 34%;
+  content: "";
+}
+
+.location__map-prompt {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  max-width: 390px;
+  min-height: 76px;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  border: 1px solid rgba(245, 236, 224, 0.2);
+  background: rgba(15, 13, 12, 0.92);
+  transition: transform 220ms var(--ease), background-color 220ms ease;
+}
+
+.location__map-spinner {
+  width: 26px;
+  height: 26px;
+  flex: 0 0 auto;
+  border: 2px solid rgba(245, 236, 224, 0.26);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: map-loader-spin 800ms linear infinite;
+}
+
+@keyframes map-loader-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+.location__map-prompt strong,
+.location__map-prompt small {
+  display: block;
+}
+
+.location__map-prompt strong {
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+.location__map-prompt small {
+  margin-top: 4px;
+  color: var(--bone-muted);
+  font-size: 11px;
 }
 
 .reviews {
@@ -2288,8 +2437,26 @@ button.cut-card {
     padding: 0 0 48px;
   }
 
-  .location__map iframe {
+  .location__map-frame {
     min-height: 360px;
+    clip-path: inset(0);
+  }
+
+  .location__map-surface,
+  .location__map-iframe,
+  .location__map-loader {
+    height: 100%;
+    min-height: 360px;
+  }
+
+  .location__map-loader {
+    padding: 20px;
+  }
+
+  .location__map-prompt {
+    width: 100%;
+    min-height: 68px;
+    padding: 14px 16px;
   }
 
   .reviews {
@@ -2440,6 +2607,14 @@ button.cut-card {
 
   .order__steps li {
     opacity: 1;
+  }
+
+  .location__map-frame {
+    clip-path: inset(0);
+  }
+
+  .location__map-spinner {
+    animation: none;
   }
 }
 @media (prefers-reduced-motion: reduce) and (min-width: 900px) {

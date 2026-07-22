@@ -130,11 +130,13 @@
             autoplay
             loop
             playsinline
-            preload="metadata"
+            preload="none"
             poster="/img/video_principal_poster.webp"
+            data-deferred-video
             aria-hidden="true"
           >
-            <source src="/video/video_principal.mp4" type="video/mp4" />
+            <source data-src="/video/video_principal-mobile.mp4" media="(max-width: 760px)" type="video/mp4" />
+            <source data-src="/video/video_principal-desktop.mp4" type="video/mp4" />
           </video>
         </div>
         <div class="hero__shade" aria-hidden="true"></div>
@@ -200,7 +202,23 @@
         <div class="houses__stage">
           <article class="house house--one">
             <div class="house__image">
-              <img src="/img/img_laprovi1/exterior_1.webp" alt="Exterior de La Providencia I en Mercado Santa Cruz" width="1600" height="1200" loading="lazy" />
+              <picture>
+                <source
+                  type="image/avif"
+                  srcset="/img/img_laprovi1/exterior_1-800.avif 800w, /img/img_laprovi1/exterior_1.avif 1600w"
+                  sizes="(max-width: 760px) calc(100vw - 32px), 50vw"
+                />
+                <img
+                  src="/img/img_laprovi1/exterior_1.webp"
+                  srcset="/img/img_laprovi1/exterior_1-800.webp 800w, /img/img_laprovi1/exterior_1.webp 1600w"
+                  sizes="(max-width: 760px) calc(100vw - 32px), 50vw"
+                  alt="Exterior de La Providencia I en Mercado Santa Cruz"
+                  width="1600"
+                  height="1200"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </picture>
             </div>
             <div class="house__copy">
               <div>
@@ -223,7 +241,23 @@
           </article>
           <article class="house house--two">
             <div class="house__image">
-              <img src="/img/img_laprovi2/local_exterior.webp" alt="Exterior de La Providencia II en Santa María Ajoloapan" width="1600" height="1200" loading="lazy" />
+              <picture>
+                <source
+                  type="image/avif"
+                  srcset="/img/img_laprovi2/local_exterior-800.avif 800w, /img/img_laprovi2/local_exterior.avif 1600w"
+                  sizes="(max-width: 760px) calc(100vw - 32px), 50vw"
+                />
+                <img
+                  src="/img/img_laprovi2/local_exterior.webp"
+                  srcset="/img/img_laprovi2/local_exterior-800.webp 800w, /img/img_laprovi2/local_exterior.webp 1600w"
+                  sizes="(max-width: 760px) calc(100vw - 32px), 50vw"
+                  alt="Exterior de La Providencia II en Santa María Ajoloapan"
+                  width="1600"
+                  height="1200"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </picture>
             </div>
             <div class="house__copy">
               <div>
@@ -344,27 +378,75 @@
             </aside>
           </div>
           <div class="gallery__grid" data-gallery>
-            <button class="gallery-item gallery-item--wide" type="button" data-media="/video/galeria_laprovi1.mp4" data-type="video" data-reel-ratio="1.7778" data-reel-branch="La Providencia I" data-reel-title="Corte al momento" data-reel-description="Así preparamos cada pieza: manos expertas, cuchillo preciso y el corte que pediste." aria-label="Reproducir video de La Providencia I">
-              <img src="/img/img_laprovi1/video_thumb.webp" alt="Carnicero preparando un corte en La Providencia I" width="800" height="450" loading="lazy" />
-              <video class="gallery-item__reel-video" src="/video/galeria_laprovi1.mp4" muted loop playsinline preload="metadata" poster="/img/img_laprovi1/video_thumb.webp" aria-hidden="true"></video>
+            <button class="gallery-item gallery-item--wide" type="button" data-media="/video/galeria_laprovi1-web.mp4" data-type="video" data-reel-ratio="1.7778" data-reel-branch="La Providencia I" data-reel-title="Corte al momento" data-reel-description="Así preparamos cada pieza: manos expertas, cuchillo preciso y el corte que pediste." aria-label="Reproducir video de La Providencia I">
+              <img src="/img/img_laprovi1/video_thumb.webp" alt="Carnicero preparando un corte en La Providencia I" width="800" height="450" loading="lazy" decoding="async" />
+              <video class="gallery-item__reel-video" data-src="/video/galeria_laprovi1-web.mp4" muted loop playsinline preload="none" poster="/img/img_laprovi1/video_thumb.webp" aria-hidden="true"></video>
               <span class="gallery-item__play" aria-hidden="true"><i data-lucide="play"></i></span>
               <span class="gallery-item__meta"><b>La Providencia I</b><i data-lucide="play" aria-hidden="true"></i></span>
             </button>
             <button class="gallery-item gallery-item--tall" type="button" data-media="/img/img_laprovi2/vitrina1.webp" data-reel-ratio="0.75" data-reel-branch="La Providencia II" data-reel-title="La vitrina" data-reel-description="Carnes, embutidos y preparados frescos reunidos en el mostrador de Santa María Ajoloapan." aria-label="Ampliar vitrina de carnes y embutidos">
-              <img src="/img/img_laprovi2/vitrina1.webp" alt="Vitrina de carnes y embutidos de La Providencia II" width="1600" height="2134" loading="lazy" />
+              <picture>
+                <source
+                  type="image/avif"
+                  srcset="/img/img_laprovi2/vitrina1-800.avif 800w, /img/img_laprovi2/vitrina1.avif 1600w"
+                  sizes="(max-width: 760px) calc(100vw - 32px), 620px"
+                />
+                <img
+                  src="/img/img_laprovi2/vitrina1.webp"
+                  srcset="/img/img_laprovi2/vitrina1-800.webp 800w, /img/img_laprovi2/vitrina1.webp 1600w"
+                  sizes="(max-width: 760px) calc(100vw - 32px), 620px"
+                  alt="Vitrina de carnes y embutidos de La Providencia II"
+                  width="1600"
+                  height="2134"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </picture>
               <span class="gallery-item__meta"><b>Vitrina II</b><i data-lucide="maximize-2" aria-hidden="true"></i></span>
             </button>
             <button class="gallery-item" type="button" data-media="/img/img_laprovi1/vitrina_1.webp" data-reel-ratio="1.3333" data-reel-branch="La Providencia I" data-reel-title="El mostrador" data-reel-description="Cortes frescos del día, listos para prepararse exactamente con el grosor y la porción que necesitas." aria-label="Ampliar mostrador de La Providencia I">
-              <img src="/img/img_laprovi1/vitrina_1.webp" alt="Mostrador con cortes frescos de La Providencia I" width="1600" height="1200" loading="lazy" />
+              <picture>
+                <source
+                  type="image/avif"
+                  srcset="/img/img_laprovi1/vitrina_1-800.avif 800w, /img/img_laprovi1/vitrina_1.avif 1600w"
+                  sizes="(max-width: 760px) calc(100vw - 32px), 620px"
+                />
+                <img
+                  src="/img/img_laprovi1/vitrina_1.webp"
+                  srcset="/img/img_laprovi1/vitrina_1-800.webp 800w, /img/img_laprovi1/vitrina_1.webp 1600w"
+                  sizes="(max-width: 760px) calc(100vw - 32px), 620px"
+                  alt="Mostrador con cortes frescos de La Providencia I"
+                  width="1600"
+                  height="1200"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </picture>
               <span class="gallery-item__meta"><b>Mostrador I</b><i data-lucide="maximize-2" aria-hidden="true"></i></span>
             </button>
             <button class="gallery-item" type="button" data-media="/img/img_laprovi2/verdura1.webp" data-reel-ratio="1.3333" data-reel-branch="La Providencia II" data-reel-title="Fresco para el mandado" data-reel-description="Frutas y verduras para completar la comida en una sola visita, junto con carnicería y abarrotes." aria-label="Ampliar sección de frutas y verduras">
-              <img src="/img/img_laprovi2/verdura1.webp" alt="Frutas y verduras frescas en La Providencia II" width="1600" height="1200" loading="lazy" />
+              <picture>
+                <source
+                  type="image/avif"
+                  srcset="/img/img_laprovi2/verdura1-800.avif 800w, /img/img_laprovi2/verdura1.avif 1600w"
+                  sizes="(max-width: 760px) calc(100vw - 32px), 620px"
+                />
+                <img
+                  src="/img/img_laprovi2/verdura1.webp"
+                  srcset="/img/img_laprovi2/verdura1-800.webp 800w, /img/img_laprovi2/verdura1.webp 1600w"
+                  sizes="(max-width: 760px) calc(100vw - 32px), 620px"
+                  alt="Frutas y verduras frescas en La Providencia II"
+                  width="1600"
+                  height="1200"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </picture>
               <span class="gallery-item__meta"><b>Frescos II</b><i data-lucide="maximize-2" aria-hidden="true"></i></span>
             </button>
-            <button class="gallery-item gallery-item--wide" type="button" data-media="/video/galeria_laprovi2.mp4" data-type="video" data-reel-ratio="1.7778" data-reel-branch="La Providencia II" data-reel-title="Una vuelta por la tienda" data-reel-description="Vitrina, pasillos, despensa y frescos: todo lo que encuentras en nuestra segunda casa." aria-label="Reproducir recorrido por La Providencia II">
-              <img src="/img/img_laprovi2/video_thumb.webp" alt="Recorrido por La Providencia II" width="800" height="450" loading="lazy" />
-              <video class="gallery-item__reel-video" src="/video/galeria_laprovi2.mp4" muted loop playsinline preload="metadata" poster="/img/img_laprovi2/video_thumb.webp" aria-hidden="true"></video>
+            <button class="gallery-item gallery-item--wide" type="button" data-media="/video/galeria_laprovi2-web.mp4" data-type="video" data-reel-ratio="1.7778" data-reel-branch="La Providencia II" data-reel-title="Una vuelta por la tienda" data-reel-description="Vitrina, pasillos, despensa y frescos: todo lo que encuentras en nuestra segunda casa." aria-label="Reproducir recorrido por La Providencia II">
+              <img src="/img/img_laprovi2/video_thumb.webp" alt="Recorrido por La Providencia II" width="800" height="450" loading="lazy" decoding="async" />
+              <video class="gallery-item__reel-video" data-src="/video/galeria_laprovi2-web.mp4" muted loop playsinline preload="none" poster="/img/img_laprovi2/video_thumb.webp" aria-hidden="true"></video>
               <span class="gallery-item__play" aria-hidden="true"><i data-lucide="play"></i></span>
               <span class="gallery-item__meta"><b>Recorrido II</b><i data-lucide="play" aria-hidden="true"></i></span>
             </button>
@@ -392,13 +474,24 @@
               </a>
             </div>
             <div class="location__map">
-              <iframe
-                title="Mapa de La Providencia I en Mercado Santa Cruz"
-                src="https://www.google.com/maps?q=19.711597,-98.972931&z=16&output=embed"
-                loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade"
-                allowfullscreen
-              ></iframe>
+              <div class="location__map-frame">
+                <div class="location__map-surface">
+                  <div
+                    class="location__map-loader"
+                    data-map-src="https://www.google.com/maps?q=19.711597,-98.972931&amp;z=16&amp;output=embed"
+                    data-map-title="Mapa de La Providencia I en Mercado Santa Cruz"
+                    role="status"
+                    aria-live="polite"
+                    aria-atomic="true"
+                  >
+                    <span class="location__map-grid" aria-hidden="true"></span>
+                    <span class="location__map-prompt">
+                      <span class="location__map-spinner" aria-hidden="true"></span>
+                      <span><strong data-map-status>Cargando mapa</strong><small>Preparando Google Maps…</small></span>
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
           </article>
           <article class="location">
@@ -416,13 +509,24 @@
               </a>
             </div>
             <div class="location__map">
-              <iframe
-                title="Mapa de La Providencia II en Santa María Ajoloapan"
-                src="https://www.google.com/maps?q=Centenario+Manzana+012,+Santa+Mar%C3%ADa+Ajoloapan,+55750&z=16&output=embed"
-                loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade"
-                allowfullscreen
-              ></iframe>
+              <div class="location__map-frame">
+                <div class="location__map-surface">
+                  <div
+                    class="location__map-loader"
+                    data-map-src="https://www.google.com/maps?q=Centenario+Manzana+012,+Santa+Mar%C3%ADa+Ajoloapan,+55750&amp;z=16&amp;output=embed"
+                    data-map-title="Mapa de La Providencia II en Santa María Ajoloapan"
+                    role="status"
+                    aria-live="polite"
+                    aria-atomic="true"
+                  >
+                    <span class="location__map-grid" aria-hidden="true"></span>
+                    <span class="location__map-prompt">
+                      <span class="location__map-spinner" aria-hidden="true"></span>
+                      <span><strong data-map-status>Cargando mapa</strong><small>Preparando Google Maps…</small></span>
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
           </article>
         </div>
@@ -456,7 +560,23 @@
 
       <section class="final-cta section" aria-labelledby="cta-title">
         <div class="final-cta__media" aria-hidden="true">
-          <img src="/img/carnicero_fileteando.webp" alt="" width="1376" height="768" loading="lazy" decoding="async" />
+          <picture>
+            <source
+              type="image/avif"
+              srcset="/img/carnicero_fileteando-800.avif 800w, /img/carnicero_fileteando.avif 1376w"
+              sizes="100vw"
+            />
+            <img
+              src="/img/carnicero_fileteando.webp"
+              srcset="/img/carnicero_fileteando-800.webp 800w, /img/carnicero_fileteando.webp 1376w"
+              sizes="100vw"
+              alt=""
+              width="1376"
+              height="768"
+              loading="lazy"
+              decoding="async"
+            />
+          </picture>
         </div>
         <div class="final-cta__content">
           <p class="label">Haz tu pedido hoy</p>
